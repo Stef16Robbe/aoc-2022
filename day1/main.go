@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 )
 
@@ -20,7 +21,7 @@ func main() {
 	scanner := bufio.NewScanner(f)
 
 	elfTotal := uint64(0)
-	highest := uint64(0)
+	totals := []uint64{}
 
 	for scanner.Scan() {
 		num, err := strconv.ParseUint(scanner.Text(), 10, 0)
@@ -29,9 +30,7 @@ func main() {
 			elfTotal += num
 		} else {
 			// we have hit a newline
-			if elfTotal > highest {
-				highest = elfTotal
-			}
+			totals = append(totals, elfTotal)
 			elfTotal = 0
 		}
 	}
@@ -40,5 +39,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(highest)
+	// https://stackoverflow.com/a/40932847/10503012
+	sort.Slice(totals, func(i, j int) bool {
+		return totals[i] > totals[j]
+	})
+
+	fmt.Println(totals[0] + totals[1] + totals[2])
 }
