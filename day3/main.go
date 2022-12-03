@@ -49,6 +49,7 @@ func main() {
 
 	badges := []rune{}
 	group := []string{}
+
 	for scanner.Scan() {
 		if len(group) == 3 {
 			badges = append(badges, getBadge(group))
