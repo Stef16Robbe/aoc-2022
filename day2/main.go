@@ -8,7 +8,6 @@ import (
 	"strings"
 )
 
-// https://golangdocs.com/structs-in-golang
 type Result struct {
 	opponent string
 	player   string
@@ -20,28 +19,36 @@ var guaranteedPointsPerMove = map[string]uint16{
 	"Z": 3,
 }
 
-var pointsPerResult = map[Result]uint16{
-	{opponent: "A", player: "X"}: 3,
-	{opponent: "B", player: "X"}: 0,
-	{opponent: "C", player: "X"}: 6,
-	{opponent: "A", player: "Y"}: 6,
-	{opponent: "B", player: "Y"}: 3,
-	{opponent: "C", player: "Y"}: 0,
-	{opponent: "A", player: "Z"}: 0,
-	{opponent: "B", player: "Z"}: 6,
-	{opponent: "C", player: "Z"}: 3,
+func newStrat(res Result) Result {
+	move := ""
+
+	loose := map[string]string{"A": "Z", "B": "X", "C": "Y"}
+	draw := map[string]string{"A": "X", "B": "Y", "C": "Z"}
+	win := map[string]string{"A": "Y", "B": "Z", "C": "X"}
+
+	if res.player == "X" {
+		move = loose[res.opponent]
+	} else if res.player == "Y" {
+		move = draw[res.opponent]
+	} else {
+		move = win[res.opponent]
+	}
+
+	return Result{res.opponent, move}
 }
 
-func determineResultScore(res Result) uint16 {
-	totalScore := uint16(0)
+func gameScore(res string) uint16 {
+	points := uint16(0)
 
-	totalScore += guaranteedPointsPerMove[res.player]
-	totalScore += pointsPerResult[res]
+	if res == "Y" {
+		points = 3
+	} else if res == "Z" {
+		points = 6
+	}
 
-	return uint16(totalScore)
+	return points
 }
 
-// https://gosamples.dev/read-file/
 func main() {
 	f, err := os.Open("input.txt")
 	if err != nil {
@@ -60,7 +67,9 @@ func main() {
 		currRes.opponent = moves[0]
 		currRes.player = moves[1]
 
-		totalPoints += determineResultScore(currRes)
+		newRes := newStrat(currRes)
+		totalPoints += guaranteedPointsPerMove[newRes.player]
+		totalPoints += gameScore(moves[1])
 	}
 
 	if err := scanner.Err(); err != nil {
