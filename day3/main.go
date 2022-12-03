@@ -58,10 +58,10 @@ func getPrioritiesTotal(commonItems []rune) uint16 {
 
 // 1. read line content into two different arrays (sack 1, sack 2) [X]
 // 2. find the common item between the two, add it to a seperate slice [X]
-// 3. find a smart way to get the priorities without hard coding [ ]
-// 4. find priorities for all items in slice, add them up together [ ]
+// 3. find a smart way to get the priorities without hard coding [X]
+// 4. find priorities for all items in slice, add them up together [X]
 // 5. ???
-// 6. profit [ ]
+// 6. profit [X]
 func main() {
 	f, err := os.Open("input.txt")
 	if err != nil {
