@@ -20,9 +20,7 @@ func contains(elems []rune, v rune) bool {
 func getSacks(line string) ([]rune, []rune) {
 	itemCount := len(line)
 
-	// sackOne := strings.Split(line[:itemCount/2], "")
 	sackOne := []rune(line[:itemCount/2])
-	// sackTwo := strings.Split(line[itemCount/2:], "")
 	sackTwo := []rune(line[itemCount/2:])
 
 	return sackOne, sackTwo
