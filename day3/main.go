@@ -7,37 +7,20 @@ import (
 	"os"
 )
 
-func contains(elems []rune, v rune) bool {
-	for _, s := range elems {
-		if v == s {
-			return true
-		}
-	}
+func getBadge(group []string) rune {
+	var badge rune
 
-	return false
-}
-
-func getSacks(line string) ([]rune, []rune) {
-	itemCount := len(line)
-
-	sackOne := []rune(line[:itemCount/2])
-	sackTwo := []rune(line[itemCount/2:])
-
-	return sackOne, sackTwo
-}
-
-func getCommonItems(sackOne []rune, sackTwo []rune) []rune {
-	commonItems := []rune{}
-
-	for _, sOneItem := range sackOne {
-		for _, sTwoitem := range sackTwo {
-			if sOneItem == sTwoitem && !contains(commonItems, sOneItem) {
-				commonItems = append(commonItems, sOneItem)
+	for _, itemElfOne := range group[0] {
+		for _, itemElfTwo := range group[1] {
+			for _, itemElfThree := range group[2] {
+				if itemElfOne == itemElfTwo && itemElfOne == itemElfThree {
+					badge = itemElfOne
+				}
 			}
 		}
 	}
 
-	return commonItems
+	return badge
 }
 
 func getPrioritiesTotal(commonItems []rune) uint16 {
@@ -54,12 +37,6 @@ func getPrioritiesTotal(commonItems []rune) uint16 {
 	return prioritiesTotal
 }
 
-// 1. read line content into two different arrays (sack 1, sack 2) [X]
-// 2. find the common item between the two, add it to a seperate slice [X]
-// 3. find a smart way to get the priorities without hard coding [X]
-// 4. find priorities for all items in slice, add them up together [X]
-// 5. ???
-// 6. profit [X]
 func main() {
 	f, err := os.Open("input.txt")
 	if err != nil {
@@ -70,13 +47,18 @@ func main() {
 
 	scanner := bufio.NewScanner(f)
 
-	commonItems := []rune{}
+	badges := []rune{}
+	group := []string{}
 	for scanner.Scan() {
-		sackOne, sackTwo := getSacks(scanner.Text())
-		commonItems = append(commonItems, getCommonItems(sackOne, sackTwo)...)
+		if len(group) == 3 {
+			badges = append(badges, getBadge(group))
+			group = []string{}
+		}
+
+		group = append(group, scanner.Text())
 	}
 
-	prioritiesTotal := getPrioritiesTotal(commonItems)
+	prioritiesTotal := getPrioritiesTotal(badges)
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
