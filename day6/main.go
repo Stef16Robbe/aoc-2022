@@ -26,7 +26,7 @@ func removeDuplicateValues(runeSlice []rune) []rune {
 
 func checkMarker(m []rune) bool {
 	isMarker := true
-	if len(removeDuplicateValues(m)) != 4 {
+	if len(removeDuplicateValues(m)) != 14 {
 		isMarker = false
 	}
 
@@ -48,7 +48,7 @@ func main() {
 		line := scanner.Text()
 		chars := []rune(line)
 		from := 0
-		to := 4
+		to := 14
 
 		for i := 0; i < len(line)-1; i++ {
 			marker := chars[from:to]
